@@ -24,5 +24,33 @@ namespace qpwakaba.Extensions
             return t;
         }
 
+        public static IfExpression<T> If<T>(this T t, Predicate<T> condition) => new IfExpression<T>(t, condition(t));
+        public static IfExpression<T> If<T>(this T t, bool condition) => new IfExpression<T>(t, condition);
+
+        public readonly ref struct IfExpression<T>
+        {
+            private readonly T t;
+            private readonly bool condition;
+            internal IfExpression(T t, bool cond)
+            {
+                this.t = t;
+                this.condition = cond;
+            }
+
+            public IfExpression<T> Then(Action<T> action)
+            {
+                if (condition) action(this.t);
+                return this;
+            }
+
+            public IfExpression<T> Otherwise(Action<T> action)
+            {
+                if (condition.Not()) action(this.t);
+                return this;
+            }
+
+            public T Fi() => t;
+        }
+
     }
 }
