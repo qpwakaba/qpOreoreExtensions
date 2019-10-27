@@ -10,7 +10,11 @@ namespace qpwakaba.Extensions
     public static class ScopeFunctions
     {
         public static R Let<T, R>(this T t, Func<T, R> action) => action(t);
-        public static void Let<T>(this T t, Action<T> action) => action(t);
+        public static Void Let<T>(this T t, Action<T> action)
+        {
+            action(t);
+            return default;
+        }
 
         [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "need catch all exceptions")]
         public static PipeState<TOut> Pipe<TIn, TOut>(this TIn tin, Func<TIn, TOut> func)
@@ -157,6 +161,8 @@ namespace qpwakaba.Extensions
 
             public T Fi() => t;
         }
+
+        public readonly struct Void { }
 
     }
 }
